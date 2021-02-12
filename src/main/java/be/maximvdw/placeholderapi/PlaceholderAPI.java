@@ -115,6 +115,7 @@ public class PlaceholderAPI extends JavaPlugin{
         }
         return placeholderPlugins.get(0).getPlaceHolderCount();
     }
+
     /**
      * Register a custom placeholder
      *
@@ -131,12 +132,35 @@ public class PlaceholderAPI extends JavaPlugin{
      *
      * @param plugin      Plugin that is registering the placeholder
      * @param placeholder Placeholder to be registered WITHOUT { }
+     * @param silent      If true, the placeholder name will not be logged to console.
+     * @return Returns if the placeholder is added or not
+     */
+    public static boolean registerPlaceholder(Plugin plugin, String placeholder, PlaceholderReplacer replacer, boolean silent) {
+        return PlaceholderAPI.registerPlaceholder(plugin, placeholder, replacer, new ArrayList<PlaceholderOptions>(), silent);
+    }
+
+    /**
+     * Register a custom placeholder
+     *
+     * @param plugin      Plugin that is registering the placeholder
+     * @param placeholder Placeholder to be registered WITHOUT { }
      * @return Returns if the placeholder is added or not
      */
     public static boolean registerPlaceholder(Plugin plugin, String placeholder, PlaceholderReplacer replacer, PlaceholderOptions ...options) {
         return PlaceholderAPI.registerPlaceholder(plugin, placeholder, replacer, new ArrayList<PlaceholderOptions>());
     }
 
+    /**
+     * Register a custom placeholder
+     *
+     * @param plugin      Plugin that is registering the placeholder
+     * @param placeholder Placeholder to be registered WITHOUT { }
+     * @param silent      If true, the placeholder name will not be logged to console.
+     * @return Returns if the placeholder is added or not
+     */
+    public static boolean registerPlaceholder(Plugin plugin, String placeholder, PlaceholderReplacer replacer, boolean silent, PlaceholderOptions ...options) {
+        return PlaceholderAPI.registerPlaceholder(plugin, placeholder, replacer, new ArrayList<PlaceholderOptions>(), silent);
+    }
 
     /**
      * Register a custom placeholder
@@ -146,6 +170,18 @@ public class PlaceholderAPI extends JavaPlugin{
      * @return Returns if the placeholder is added or not
      */
     private static boolean registerPlaceholder(Plugin plugin, String placeholder, PlaceholderReplacer replacer, Collection<PlaceholderOptions> options) {
+        return registerPlaceholder(plugin, placeholder, replacer, options, false);
+    }
+
+    /**
+     * Register a custom placeholder
+     *
+     * @param plugin      Plugin that is registering the placeholder
+     * @param placeholder Placeholder to be registered WITHOUT { }
+     * @param silent      If true, the placeholder name will not be logged to console.
+     * @return Returns if the placeholder is added or not
+     */
+    private static boolean registerPlaceholder(Plugin plugin, String placeholder, PlaceholderReplacer replacer, Collection<PlaceholderOptions> options, boolean silent) {
         if (plugin == null)
             return false;
         if (placeholder == null)
@@ -154,8 +190,8 @@ public class PlaceholderAPI extends JavaPlugin{
             return false;
         if (replacer == null)
             return false;
-        SendConsole.info(plugin.getName() + " added custom placeholder {"
-                + placeholder.toLowerCase() + "}");
+        if(!silent)
+            SendConsole.info(plugin.getName() + " added custom placeholder {" + placeholder.toLowerCase() + "}");
         be.maximvdw.placeholderapi.internal.PlaceholderReplacer<String> internalReplacer = new be.maximvdw.placeholderapi.internal.PlaceholderReplacer<String>(String.class,
                 replacer) {
             @Override
